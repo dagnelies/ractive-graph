@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html ng-app="my-app">
+<head lang="en">
+	<meta charset="utf-8">
+	<script src="libs/ractive.js"></script>
+	<script src="bin/ractive-graph.js"></script>
+	<style>
+		.node {
+			background-color: lightblue;
+			padding: 10px;
+			border-radius: 10px;
+			cursor: move;
+			border: 1px solid gray;
+		}
+		.node:hover {
+			background-color: lightgreen;
+		}
+		
+		.edge {
+			stroke: red;
+			stroke-width: 3;
+		}
+		
+		.edge:hover {
+			stroke-width: 7;
+		}
+		#graph {
+			border: 1px dotted gray;
+		}
+		.label {
+			background-color: ivory;
+			padding: 3px;
+			border-radius: 3px;
+			border: 1px solid gray;
+			opacity: 0.8;
+		}
+	</style>
+</head>
+
+<body>
+	<script id="template" type="ractive">
+		<graph id="graph" height="800px">
+			{{#each nodes}}
+				<node id="{{id}}" x="{{x}}" y="{{y}}" class="node">{{id}}</node>
+			{{/each}}
+			{{#each edges}}
+				<edge from="{{from}}" to="{{to}}" class="edge" />
+			{{/each}}
+		</graph>
+		<p>
+			<button onclick="clearAll()">Clear</button>
+			<button onclick="addNodes(10)">Add 10 nodes</button>
+			<button onclick="addNodes(100)">Add 100 nodes</button>
+			<button onclick="addEdges(10)">Add 10 edges</button>
+			<button onclick="addEdges(100)">Add 100 edges</button>
+		</p>
+	</script>
+	
+	<script>
+		function idGenerator() {
+			return Math.random().toString(16).substr(2);
+		}
+
+		ractive = new Ractive({
+			el: 'body',
+			template: '#template',
+			data: {
+				nodes: [],
+				edges: []
+			}
+		})
+		
+		function clearAll() {
+			ractive.set({
+				nodes: [],
+				edges: []
+			})
+		}
+		
+		function addNodes( n ) {
+			var g = document.getElementById("graph")
+			for( var i=0; i<n; i++ ) {
+				ractive.push('nodes', {
+					id: idGenerator(),
+					x: Math.floor(Math.random() * (g.clientWidth - 100)),
+					y: Math.floor(Math.random() * (g.clientHeight - 100))
+				})
+			}
+		}
+		function addEdges( n ) {
+			var nodes = ractive.get('nodes')
+			for( var i=0; i<n; i++ ) {
+				ractive.push('edges', {
+					from: nodes[ Math.floor(nodes.length * Math.random()) ].id,
+					to: nodes[ Math.floor(nodes.length * Math.random()) ].id
+				})
+			}
+		}
+		
+		addNodes(10)
+		addEdges(10)
+	</script>
+	
+</body>
+</html>

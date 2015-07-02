@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html ng-app="my-app">
+<head lang="en">
+	<meta charset="utf-8">
+	<script src='libs/ractive.js'></script>
+	<script src="bin/ractive-graph.min.js"></script>
+	<style>
+		.node {
+			background-color: lightblue;
+			padding: 10px;
+			border-radius: 10px;
+			cursor: move;
+			border: 1px solid gray;
+		}
+		.node:hover {
+			background-color: lightgreen;
+		}
+		
+		.edge {
+			stroke: red;
+			stroke-width: 3;
+		}
+		
+		.edge:hover {
+			stroke-width: 7;
+		}
+		.graph {
+			/* height: 500px; */
+			border: 1px dotted gray;
+		}
+		.label {
+			background-color: ivory;
+			padding: 3px;
+			border-radius: 3px;
+			border: 1px solid gray;
+			opacity: 0.8;
+		}
+	</style>
+</head>
+
+<body>
+	<script id="template" type="ractive">
+		<graph class="graph">
+			<node id="alice" x="10" y="10" class="node">Alice</node>
+			<node id="bob" x="200" y="100" class="node">Bob</node>
+			<node id="charlie" x="100" y="200" class="node">Charlie</node>
+			
+			<!--
+			<edge x1=10 x2=100 y1=10 y2=100 class="edge" />
+			<edge x1=100 x2=10 y1=10 y2=100 class="edge" />
+			-->
+			<edge from="alice" to="bob" class="edge" ><div class="label" onclick="alert('foo')">Click me!</div></edge>
+			<edge from="bob" to="charlie" class="edge" onclick="alert('bar')" />
+			<edge from="alice" to="charlie" class="edge" />
+		</graph>
+	</script>
+	
+	<script>
+		ractive = new Ractive({
+			el: 'body',
+			template: '#template'
+		})
+	</script>
+	
+</body>
+</html>
